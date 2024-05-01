@@ -1,65 +1,85 @@
 import Foundation
 
-// Closure
-// 함수와 개념이 같음
+// Closure 2
 
-// Function (Named Closure)
-// (Int, Int) -> Int
-func plus(a:Int, b:Int)->Int {
-    return a + b;
-}
+// Func + closure
 
-// Closure (Unnamed Closure)
-// 이름이 없는 형태
-// {} 대괄호가 클로저임을 알려줌
-// 구현부는 in으로 구분
-//{ (a:Int, b:Int) -> Int in
-//    return a + b
-//}
-
-// 변수나 상수에 Closure를 대입
-// (Int, Int) -> Int
-var myClosure = { (a:Int, b:Int) -> Int in
-    return a + b
-}
-
-// 클로저는 함수처럼 argument label를 사용할 수 없다.
-plus(a: 10, b: 20)
-myClosure(10, 20)
-
-// Function의 parameter에 closure에 넣어서 사용하는 방식
-func f1 () {
-    print("작업중...")
-    print("작업중...")
+func myfunc(closure: ()-> Void) {
     
-    f2()
-}
-func f2 () {
-    print("작업완료처리")
 }
 
-// 의도가 불분명해 보인다.
-//f1()
-//f2()
-
-
-func f10 (myClosure: ()->Void) {
-    print("작업중...")
-    print("작업중...")
-    
-    myClosure() // 파라미터로 받은 클로저 실행
-}
-func f20 () {
-    print("작업완료처리")
+myfunc {
+    print("closure")
 }
 
-// f10에 f20 호출이 전달됨. 실행 로직이 예상이 된다.
-f10(myClosure: {() -> Void in f20()})
-
-// () -> Void 생략 가능
-f10(myClosure: {f20()})
-
-// 파라미터 이름 생략 가능
-f10 {
-    f20()
+// func + closure 2개
+func myfunc2(closure1: ()-> Void, closure2: ()->Void) {
+    print("func")
+    closure1()
+    closure2()
 }
+
+// 2번째부터는 클로저 이름 생략이 불가
+myfunc2 {
+    print("closure1")
+} closure2: {
+    print("closure2")
+}
+
+
+// func + closure 3개
+func myfunc3(closure1: ()-> Void, closure2: ()->Void, closure3: ()->Void) {
+    print("func")
+    closure1()
+    closure2()
+    closure3()
+}
+
+myfunc3 {
+    print("closure1")
+} closure2: {
+    print("closure2")
+} closure3: {
+    print("closure3")
+}
+
+// func + 기본타입 + closure
+func myFunc4(a:Int, closure: () -> Void) {
+    print(a)
+    closure()
+}
+
+myFunc4 (a:50) {
+    print("ccc")
+}
+
+//closure + Int
+func myFunc5(completion : (Int) -> Void) {
+    print("func5...")
+    let total = 100
+    completion(total)
+}
+
+// 클로저 구분을 구현해도 되고
+myFunc5 { total in
+    print(total.description + "점")
+}
+
+// 이미 구현된 함수를 클로저로 넘겨도 된다.
+func showScore(a:Int) {
+    print((a+10).description+"점")
+}
+// 함수 자체를 넘겨준다.
+myFunc5(completion: showScore)
+
+
+//closure + return, 클로저에서 리턴된 값에서 작업을 하고 싶은 때
+func myFunc6(completion:() -> Int) {
+    print("myfunc6")
+    completion() + 33
+}
+
+myFunc6{
+    return 10
+}
+
