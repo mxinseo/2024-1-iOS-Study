@@ -1,65 +1,54 @@
 import Foundation
 
-// Closure 3
+// Closure 4
 
-// Capturing Values
+//escaping closure (탈출)
+// 클로저가 언제 실행될지 모르고 밖에서 실행될 수 있는 상태일때
 
-var str = "a"
-var str2 = str
-var str3 = str2
 
-class SomeA {
-    
+func showString(completion: () -> Void) {
+    completion()
 }
 
-class SomeClass {
-    var b = 10
-    var someA = SomeA()
-    
-    func someFunc(){
-        print(b)
-    }
-    // 클로저 사용 : lazy = 접근할 때 만들어짐, 지연 저장
-    lazy var myClosure: (()-> Void)? = {
-        // 클로저에서 property를 사용할 때 self 키워드 필요
-        // 클래스 통째로 참조하고 있다.
-        print(self.b)
-    }
-    // capturing value. nil로 참조를 끊어줘야 함.
-    // b를 value로 복사해서 가져옴
-    lazy var myClosure2 = { [b] in
-        print(b)
-    }
-    // capture list 사용. 레퍼런스 타입일 때, 약한 참조로 weak를 쓰면 참조할때 레퍼런스 카운트가 증가하지 않음
-    lazy var myClosure3 = { [weak self] in
-        print(self?.b ?? 0)
-    }
-    deinit {
-        print("SomeClass deinit")
-    }
+showString {
+    print("a")
 }
 
-// myClass가 SomeClass()를 참조하고 있다.
-// 모든 참조를 끊어야 한다.
-var myClass: SomeClass? = SomeClass()
-var myClass2 = myClass
-var myClass3 = myClass2
+// 클로저 리스트 초기화
+var myClosureList = [() -> Void]()
+var myClosureList2: [() -> Void] = []
 
+func showString2(completion: @escaping () -> Void) {
+    myClosureList.append(completion)
+}
 
-myClass2?.b = 11
-myClass3?.b
+// 실행할 내용 담기
+showString2 {
+    print("aa")
+}
+showString2 {
+    print("aa")
+}
+showString2 {
+    print("aa")
+}
+// 실제 실행
+myClosureList.forEach { completion in
+    completion()
+}
 
-// 클로저 참조 끊기
-myClass?.myClosure
-myClass?.myClosure = nil
+// 이미 정의된 클로저
+var names = ["lee", "kim", "jim", "min"]
 
-myClass?.myClosure2
+names.sort(by: {(str1:String, str2:String) -> Bool in
+    return str1 > str2
+})
 
+// 축약 형태(타입 생략)
+names.sort { str1, str2 in
+    return str1 > str2  // 정렬 기준
+}
 
-// 참조 끊기
-// 모든 참조가 끊기면 deinit 된다.
-myClass = nil
-myClass2 = nil
-myClass3 = nil
-
-
+// 축약 형태(argument label 생략)
+names.sort{ $0 < $1 }
+names.sort(by: <)
