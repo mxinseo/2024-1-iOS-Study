@@ -1,85 +1,65 @@
 import Foundation
 
-// Closure 2
+// Closure 3
 
-// Func + closure
+// Capturing Values
 
-func myfunc(closure: ()-> Void) {
+var str = "a"
+var str2 = str
+var str3 = str2
+
+class SomeA {
     
 }
 
-myfunc {
-    print("closure")
+class SomeClass {
+    var b = 10
+    var someA = SomeA()
+    
+    func someFunc(){
+        print(b)
+    }
+    // 클로저 사용 : lazy = 접근할 때 만들어짐, 지연 저장
+    lazy var myClosure: (()-> Void)? = {
+        // 클로저에서 property를 사용할 때 self 키워드 필요
+        // 클래스 통째로 참조하고 있다.
+        print(self.b)
+    }
+    // capturing value. nil로 참조를 끊어줘야 함.
+    // b를 value로 복사해서 가져옴
+    lazy var myClosure2 = { [b] in
+        print(b)
+    }
+    // capture list 사용. 레퍼런스 타입일 때, 약한 참조로 weak를 쓰면 참조할때 레퍼런스 카운트가 증가하지 않음
+    lazy var myClosure3 = { [weak self] in
+        print(self?.b ?? 0)
+    }
+    deinit {
+        print("SomeClass deinit")
+    }
 }
 
-// func + closure 2개
-func myfunc2(closure1: ()-> Void, closure2: ()->Void) {
-    print("func")
-    closure1()
-    closure2()
-}
-
-// 2번째부터는 클로저 이름 생략이 불가
-myfunc2 {
-    print("closure1")
-} closure2: {
-    print("closure2")
-}
+// myClass가 SomeClass()를 참조하고 있다.
+// 모든 참조를 끊어야 한다.
+var myClass: SomeClass? = SomeClass()
+var myClass2 = myClass
+var myClass3 = myClass2
 
 
-// func + closure 3개
-func myfunc3(closure1: ()-> Void, closure2: ()->Void, closure3: ()->Void) {
-    print("func")
-    closure1()
-    closure2()
-    closure3()
-}
+myClass2?.b = 11
+myClass3?.b
 
-myfunc3 {
-    print("closure1")
-} closure2: {
-    print("closure2")
-} closure3: {
-    print("closure3")
-}
+// 클로저 참조 끊기
+myClass?.myClosure
+myClass?.myClosure = nil
 
-// func + 기본타입 + closure
-func myFunc4(a:Int, closure: () -> Void) {
-    print(a)
-    closure()
-}
-
-myFunc4 (a:50) {
-    print("ccc")
-}
-
-//closure + Int
-func myFunc5(completion : (Int) -> Void) {
-    print("func5...")
-    let total = 100
-    completion(total)
-}
-
-// 클로저 구분을 구현해도 되고
-myFunc5 { total in
-    print(total.description + "점")
-}
-
-// 이미 구현된 함수를 클로저로 넘겨도 된다.
-func showScore(a:Int) {
-    print((a+10).description+"점")
-}
-// 함수 자체를 넘겨준다.
-myFunc5(completion: showScore)
+myClass?.myClosure2
 
 
-//closure + return, 클로저에서 리턴된 값에서 작업을 하고 싶은 때
-func myFunc6(completion:() -> Int) {
-    print("myfunc6")
-    completion() + 33
-}
+// 참조 끊기
+// 모든 참조가 끊기면 deinit 된다.
+myClass = nil
+myClass2 = nil
+myClass3 = nil
 
-myFunc6{
-    return 10
-}
 
