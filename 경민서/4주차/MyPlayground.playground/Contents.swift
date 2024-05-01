@@ -1,79 +1,37 @@
 import Foundation
 
-// Enum
+// Struct, Class
 
-// 생성.
-enum GenderType : String {
-    case man = "남자"
-    case woman = "여자"
-    case type1
-    case type2
-}
-
-var genderType1 = GenderType.woman
-var genderType2 : GenderType!
-
-func showGender(type: GenderType) {
-    switch type {
-    case .man:
-        print("남")
-    case .woman:
-        print("여")
-    default:
-        break
+// 생성
+// memberwise initializer (init 이 자동으로 생성)
+struct Score1 {
+    // property
+    var myScore :Int
+    var yourScore :Int
+    
+    //method
+    func presentScore() {
+        print(myScore, yourScore)
     }
 }
 
-showGender(type: .man)
+// 변수에 담기. 구조체 안의 내용들이 모두 한번에 메모리에 올라간다.
+var score1 = Score1(myScore: 10, yourScore: 40)
 
 
-// CaseIterable, 배열 처럼 사용 가능
-
-enum Beverage: String, CaseIterable {
-    case coffee
-    case juice
-    case tea
-}
-
-let beverage = Beverage.allCases
-for beverage in Beverage.allCases {
-    print(beverage.rawValue + "a")
-}
-func findBeverage(name: String) {
-    Beverage.allCases.forEach { beverage in
-        if beverage.rawValue == name{
-            print("타입에 맞는 음료가 있음")
-        }
+// class는 자체 initializer를 만들어줘야 한다.
+class Score2 {
+    var myScore :Int
+    var yourScore :Int
+    
+    init(myScore: Int , yourScore: Int ) {
+        self.myScore = myScore
+        self.yourScore = yourScore
+    }
+    
+    func presentScore() {
+        print(myScore, yourScore)
     }
 }
-findBeverage(name: "coffee")
 
-
-// 타입을 선택 + 값
-enum Rectangle {
-    case triangle(width: Int, height:Int, angle: Int)
-    case circle(radius: Int)
-}
-
-var triangle = Rectangle.triangle(width: 100, height: 50, angle: 90)
-triangle = .circle(radius: 10)
-
-// enum 중 특정 한 case에 대한 작업
-if case let Rectangle.triangle(width, height, angle) = triangle {
-    print(width, height, angle)
-}
-
-// enum의 모든 case에 대한 작업
-switch triangle {
-    case .triangle(let width, let height, let angle):
-        print(width, height, angle)
-    case .circle(let radius):
-        print(radius)
-}
-// 다른 형태
-switch triangle {
-    case let .triangle( width,  height,  angle):
-        print(width, height, angle)
-    case let .circle( radius):
-        print(radius)
-}
+var score2 = Score2(myScore: 23, yourScore: 55)
