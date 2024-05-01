@@ -1,54 +1,79 @@
 import Foundation
 
-// Closure 4
+// Enum
 
-//escaping closure (탈출)
-// 클로저가 언제 실행될지 모르고 밖에서 실행될 수 있는 상태일때
-
-
-func showString(completion: () -> Void) {
-    completion()
+// 생성.
+enum GenderType : String {
+    case man = "남자"
+    case woman = "여자"
+    case type1
+    case type2
 }
 
-showString {
-    print("a")
+var genderType1 = GenderType.woman
+var genderType2 : GenderType!
+
+func showGender(type: GenderType) {
+    switch type {
+    case .man:
+        print("남")
+    case .woman:
+        print("여")
+    default:
+        break
+    }
 }
 
-// 클로저 리스트 초기화
-var myClosureList = [() -> Void]()
-var myClosureList2: [() -> Void] = []
+showGender(type: .man)
 
-func showString2(completion: @escaping () -> Void) {
-    myClosureList.append(completion)
+
+// CaseIterable, 배열 처럼 사용 가능
+
+enum Beverage: String, CaseIterable {
+    case coffee
+    case juice
+    case tea
 }
 
-// 실행할 내용 담기
-showString2 {
-    print("aa")
+let beverage = Beverage.allCases
+for beverage in Beverage.allCases {
+    print(beverage.rawValue + "a")
 }
-showString2 {
-    print("aa")
+func findBeverage(name: String) {
+    Beverage.allCases.forEach { beverage in
+        if beverage.rawValue == name{
+            print("타입에 맞는 음료가 있음")
+        }
+    }
 }
-showString2 {
-    print("aa")
-}
-// 실제 실행
-myClosureList.forEach { completion in
-    completion()
+findBeverage(name: "coffee")
+
+
+// 타입을 선택 + 값
+enum Rectangle {
+    case triangle(width: Int, height:Int, angle: Int)
+    case circle(radius: Int)
 }
 
-// 이미 정의된 클로저
-var names = ["lee", "kim", "jim", "min"]
+var triangle = Rectangle.triangle(width: 100, height: 50, angle: 90)
+triangle = .circle(radius: 10)
 
-names.sort(by: {(str1:String, str2:String) -> Bool in
-    return str1 > str2
-})
-
-// 축약 형태(타입 생략)
-names.sort { str1, str2 in
-    return str1 > str2  // 정렬 기준
+// enum 중 특정 한 case에 대한 작업
+if case let Rectangle.triangle(width, height, angle) = triangle {
+    print(width, height, angle)
 }
 
-// 축약 형태(argument label 생략)
-names.sort{ $0 < $1 }
-names.sort(by: <)
+// enum의 모든 case에 대한 작업
+switch triangle {
+    case .triangle(let width, let height, let angle):
+        print(width, height, angle)
+    case .circle(let radius):
+        print(radius)
+}
+// 다른 형태
+switch triangle {
+    case let .triangle( width,  height,  angle):
+        print(width, height, angle)
+    case let .circle( radius):
+        print(radius)
+}
