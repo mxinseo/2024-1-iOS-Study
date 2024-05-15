@@ -67,7 +67,7 @@ let compactValue = stringNum.compactMap{Int($0 ?? "")}
 
 // flatMap
 // 이차 배열 -> 일차 배열
-// 한단계만 내려 준다. 
+// 한단계만 내려 준다.
 var doubleNumbers = [[1,2,3], [5, 6]]
 let newdoubleNumbers = doubleNumbers.flatMap { ele in
     ele
