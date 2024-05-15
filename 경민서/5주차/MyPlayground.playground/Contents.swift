@@ -1,35 +1,58 @@
 import Foundation
 
-// static
-// 하나의 원본, 똑같은게 여러개 생기지 않는 옵션
 
-// type property
-// type method
+// property
 
-class Bank {
-    static var coin: Int = 0
+var name = ""
+
+class MyClass {
+    var name = ""
 }
 
-Bank.coin
-Bank.coin=100
-Bank.coin
+struct MyStruct {
+    var name = ""
+}
 
-class Player {
-    func plus() {
-        Bank.coin += 1
+let myClass = MyClass()
+myClass.name = "kim"
+
+
+let myStruct = MyStruct()
+//myStruct.name = "kim". // error
+
+
+// lazy stored property
+class MyClass2{
+    lazy var name = ""
+    var age = 20
+    lazy var isAdult = age > 19 ? true : false
+    lazy var names = ["kim", "lee"]
+    
+//    lazy var nameCount = names.count // logical error
+    func nameCunt2() -> Int {
+        return name.count
+    }
+}
+
+var myClass2 = MyClass2()
+
+// computed property
+class MyProfile {
+    var age = 20
+    
+    // computed property, func처럼 작동
+    var isAdult: Bool {
+        return age > 19 ? true : false
     }
     
-    func minus() {
-        Bank.coin -= 1
+    var isAdult3: Bool {
+        get {
+            !tempIsAdult
+        }
+        set {
+            tempIsAdult = newValue // 새로운 값이 들어오는 순간 tempIsAdult에 저장해줌
+        }
     }
+    
+    var tempIsAdult = false
 }
-
-let player1 = Player()
-let player2 = Player()
-let player3 = Player()
-
-player1.plus()
-player2.plus()
-player3.plus()
-
-Bank.coin
