@@ -52,7 +52,78 @@ let users: [UserInfo] = [member, guest, user]
 
 users.forEach{ info in
     print(info.presentAge())
-    print((info as? User)?.birthday)
+//    print((info as? User)?.birthday)
 }
  
 
+protocol Togglable {
+    mutating func toggle()
+}
+
+enum OnOffSwitch: Togglable {
+    case on
+    case off
+    
+    mutating func toggle() {
+        if self == .on {
+            self = .off
+        } else {
+            self = .on
+        }
+    }
+}
+
+var onoff = OnOffSwitch.off
+
+onoff.toggle()
+
+protocol SomeProtocol {
+    init(age: Int)
+}
+
+class VIPmember : SomeProtocol {
+    var age : Int
+    
+    required init(age: Int) {
+        self.age = age
+    }
+}
+
+
+// Delegation
+enum AdultType {
+    case adult
+    case noAdult
+}
+
+protocol UserInfoDelegate: AnyObject {
+    func isAdult(adultType: AdultType)
+}
+
+class UserA: UserInfoDelegate {
+    func someFunc () {
+        
+    }
+    func isAdult(adultType: AdultType) {
+        print(adultType)
+    }
+    deinit {
+        print("deinit UserA")
+    }
+}
+
+class TypeChecker {
+    weak var deletate: UserInfoDelegate?
+    
+    func checkDone() {
+        deletate?.isAdult(adultType: .adult)
+    }
+}
+
+var userA: UserA? = UserA()
+let typechecker = TypeChecker()
+
+typechecker.deletate = userA
+typechecker.checkDone()
+
+userA = nil
