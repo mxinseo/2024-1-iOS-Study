@@ -1,67 +1,33 @@
 import Foundation
 
-// Subscript
+// error handling
 
-var names = ["lee", "kim"]
-names[0]
-names[1]
-
-var colorValue = ["red": "100", "blue": "001"]
-colorValue["red"] = "빨강"
-
-struct Member {
-    var name:String
-    var age: Int
+// 에러 케이스 정의
+enum MyError: Error {
+    case invalidValue
+    case outOfLimit
 }
 
-let member1 = Member(name: "kim", age: 20)
-let member2 = Member(name: "lee", age: 25)
-let member3 = Member(name: "mon", age: 22)
-let member4 = Member(name: "seo", age: 32)
+var number = 0
 
-let members = [member1, member2, member3, member4]
-
-class Group {
-    var mambers = [Member]()
-    
-    // 데이터에 []로 바로 접근한다.
-    subscript(index: Int) -> Member {
-        return mambers[index]
+func squareArea(width: Int, height: Int) throws -> Int {
+    if width < 0 || height < 0 {
+        throw MyError.invalidValue
     }
+    if width >  100 || height > 100 {
+        throw MyError.outOfLimit
+    }
+    
+    return width * height
 }
 
-let group = Group()
-group.mambers = [member1, member2, member3, member4]
-group[0].name
-
-
-// 나이대로 데이터 가져오기
-class Group2 {
-    
-    enum AgeType {
-        case _20s
-        case _30s
-    }
-    
-    var members = [Member]()
-    
-    // 데이터에 []로 바로 접근한다.
-    subscript(ageGroup: AgeType) -> [Member] {
-        get {
-            var outputMembers = [Member]()
-            for member in members {
-                if ageGroup == ._20s && 20..<30 ~= member.age {
-                    outputMembers.append(member)
-                }
-                if ageGroup == ._30s && 30..<40 ~= member.age {
-                    outputMembers.append(member)
-                }
-            }
-            return outputMembers
-        }
-    }
+func area(completion: (Int, Int) throws -> Int) rethrows -> Int {
+    try completion(40, 50)
 }
 
-let group2 = Group2()
-group2.members = [member1, member2, member3, member4]
-group2[._20s]
+do {
+    try area(completion: squareArea)
+} catch {
+    print(error)
+}
+
